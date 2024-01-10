@@ -25,18 +25,27 @@ class SnakeGame:
         return (x, y)
 
     def get_state(self):
-        board_dimensions = ( window_width // segment_size ) * ( window_height // segment_size )
-        vec = np.zeros(board_dimensions )
+        vec = np.zeros(11)
 
+        # snake direction
+        vec[0] = self.direction == 0
+        vec[1] = self.direction == 1
+        vec[2] = self.direction == 2
+        vec[3] = self.direction == 3
+        #walls danger ahead
+        vec[4] = (self.direction == 0 and (self.snake[0][1] - window_height/2) < 0) or (self.direction == 1 and (self.snake[0][1] + window_height/2) > window_height) or (self.direction == 2 and (self.snake[0][0] - window_width/2) < 0) or (self.direction == 3 and (self.snake[0][0] + window_width) > window_width)
 
-        snake_head_pos = (self.snake[0][0]// segment_size) + (self.snake[0][1]// segment_size) * (window_width // segment_size)
-        if  snake_head_pos < board_dimensions:
-            vec[snake_head_pos] = 1
-        for segment in self.snake[1:]:
-            vec[(segment[0]// segment_size) + (segment[1]// segment_size) * (window_width // segment_size)] = 2
+        # walls danger left
+        vec[5] = (self.direction == 0 and (self.snake[0][0] - window_width / 2) < 0) or (self.direction == 1 and (self.snake[0][0] + window_width) > window_width) or (self.direction == 2 and (self.snake[0][1] + window_height / 2) > window_height) or (self.direction == 3 and (self.snake[0][1] - window_height / 2) < 0)
 
-        x, y = self.food_position
-        vec[(x// segment_size) + (y// segment_size) * (window_width // segment_size)] = 3
+        # walls danger right
+        vec[6] = (self.direction == 0 and (self.snake[0][0] + window_width) > window_width) or (self.direction == 1 and (self.snake[0][0] - window_width / 2) < 0) or  (self.direction == 2 and (self.snake[0][1] - window_height / 2) < 0) or (self.direction == 3 and (self.snake[0][1] + window_height / 2) > window_height)
+
+        #food direction
+        vec[7] = self.snake[0][1] < self.food_position[1]  # food up
+        vec[8] = self.snake[0][1] > self.food_position[1]  # food down
+        vec[9] = self.snake[0][0] < self.food_position[0] #food right
+        vec[10] = self.snake[0][0] > self.food_position[0] #food left
 
         return vec
 
@@ -44,36 +53,20 @@ class SnakeGame:
 
 
     def step(self, action):
-
+        score = 0
         x, y = self.snake[0]
-        if action == 0:
+        if action == 0: #down
             y -= segment_size
-            if self.last_direcition == 1:
-                self.game_ended = 1
-                self.score -= 10
 
-            self.last_direcition = 0
-        elif action == 1:
+        elif action == 1: #up
             y += segment_size
-            if self.last_direcition == 0:
-                self.game_ended = 1
-                self.score -= 10
 
-            self.last_direcition = 1
-        elif action == 2:
+        elif action == 2: #left
             x -= segment_size
-            if self.last_direcition == 3:
-                self.game_ended = 1
-                self.score -= 10
 
-            self.last_direcition = 2
-        elif action == 3:
+        elif action == 3: #right
             x += segment_size
-            if self.last_direcition == 2:
-                self.game_ended = 1
-                self.score -= 10
 
-            self.last_direcition = 3
 
 
         self.snake.insert(0, (x, y))
@@ -83,22 +76,18 @@ class SnakeGame:
         if self.snake[0] == self.food_position:
             self.snake_length += 1
             self.food_position = self.random_food_position()
-            self.score += 100
+            score = 10
         else:
             self.snake.pop()
-            current_destance = (abs(self.snake[0][0] - self.food_position[0]) + abs(self.snake[0][1] - self.food_position[1]))
-            # if current_destance < self.last_distance:
-            #     self.score += 5
-            # self.score += 5
+            # current_destance = (abs(self.snake[0][0] - self.food_position[0]) + abs(self.snake[0][1] - self.food_position[1]))
+            #
 
 
-            self.last_distance = current_destance
+            # self.last_distance = current_destance
 
         if (x < 0 or x >= window_width or y < 0 or y >= window_height or self.snake[0] in self.snake[1:]):
             self.game_ended = 1
-            self.score -=100
-
-        print(self.score)
+            score = -10
 
 
         self.times += 1
@@ -107,7 +96,7 @@ class SnakeGame:
         else :
             done = 0
 
-        return self.get_state(), self.score, done , self.game_ended
+        return self.get_state(), score, done , self.game_ended
 
 pygame.init()
 
@@ -148,13 +137,13 @@ def draw_score(score):
 
 
 
-input_shape = (int((window_width // segment_size) * (window_height // segment_size)),)
+input_shape = (11,)
 
 n_outputs = 4
 
 model = tf.keras.Sequential([
-    tf.keras.layers.Dense(200, activation="elu", input_shape=input_shape),
-    tf.keras.layers.Dense(100, activation="elu"),
+    tf.keras.layers.Dense(16, activation="elu", input_shape=input_shape),
+    tf.keras.layers.Dense(50, activation="elu"),
     tf.keras.layers.Dense(n_outputs)
 ])
 
@@ -184,7 +173,7 @@ def play_one_step(env, state, epsilon):
     replay_buffer.append((state, action, reward, next_state, done, truncated))
     return next_state, reward, done, truncated
 
-batch_size = 100
+batch_size = 32
 discount_factor = 0.95
 optimizer = tf.keras.optimizers.Nadam(learning_rate=1e-2)
 loss_fn = tf.keras.losses.mean_squared_error
