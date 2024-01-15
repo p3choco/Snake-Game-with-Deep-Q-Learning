@@ -31,23 +31,23 @@ class SnakeGame:
         vec[1] = self.direction == 1
         vec[2] = self.direction == 2
         vec[3] = self.direction == 3
-        #walls danger ahead
-        vec[4] = (self.direction == 0 and (self.snake[0][1] - self.window_height/2) < 0) or (
-                self.direction == 1 and (self.snake[0][1] + self.window_height/2) > self.window_height) or (
-                self.direction == 2 and (self.snake[0][0] - self.window_width/2) < 0) or (
-                self.direction == 3 and (self.snake[0][0] + self.window_width) > self.window_width)
+        # danger ahead
+        vec[4] = (self.direction == 0 and (( (self.snake[0][1] - self.segment_size) < 0) or ((self.snake[0][1] - self.segment_size) in self.snake[1:])) )or (
+                self.direction == 1 and (self.snake[0][1] + self.segment_size) > self.window_height) or (
+                self.direction == 2 and (self.snake[0][0] - self.segment_size) < 0) or (
+                self.direction == 3 and (self.snake[0][0] + self.segment_size) > self.window_width)
 
-        # walls danger left
-        vec[5] = (self.direction == 0 and (self.snake[0][0] - self.window_width / 2) < 0) or (
-                self.direction == 1 and (self.snake[0][0] + self.window_width) > self.window_width) or (
-                self.direction == 2 and (self.snake[0][1] + self.window_height / 2) > self.window_height) or (
-                self.direction == 3 and (self.snake[0][1] - self.window_height / 2) < 0)
+        # danger left
+        vec[5] = (self.direction == 0 and (((self.snake[0][0] - self.segment_size) < 0) or ((self.snake[0][0] - self.segment_size) in self.snake[1:])) )or (
+                self.direction == 1 and (self.snake[0][0] + self.segment_size) > self.window_width) or (
+                self.direction == 2 and (self.snake[0][1] + self.segment_size) > self.window_height) or (
+                self.direction == 3 and (self.snake[0][1] - self.segment_size) < 0)
 
-        # walls danger right
-        vec[6] = (self.direction == 0 and (self.snake[0][0] + self.window_width) > self.window_width) or (
-                self.direction == 1 and (self.snake[0][0] - self.window_width / 2) < 0) or  (
-                self.direction == 2 and (self.snake[0][1] - self.window_height / 2) < 0) or (
-                self.direction == 3 and (self.snake[0][1] + self.window_height / 2) > self.window_height)
+        # danger right
+        vec[6] = (self.direction == 0 and (((self.snake[0][0] + self.segment_size) > self.window_width) or ((self.snake[0][0] + self.segment_size) in self.snake[1:])) ) or (
+                self.direction == 1 and (self.snake[0][0] - self.segment_size) < 0) or  (
+                self.direction == 2 and (self.snake[0][1] - self.segment_size) < 0) or (
+                self.direction == 3 and (self.snake[0][1] + self.segment_size) > self.window_height)
 
         # tail ahead
         vec[7] = ((self.direction == 0 and (((self.snake[0][1] - self.segment_size) in self.snake[1:]) or (

@@ -31,11 +31,8 @@ class GameAgent:
 
     def sample_experiences(self):
         indices = np.random.randint(len(self.replay_buffer), size=self.batch_size)
-        batch = [self.replay_buffer[index] for index in indices]
-        return [
-            np.array([experience[field_index] for experience in batch])
-            for field_index in range(5)
-        ]
+        states, actions, rewards, next_states, truncateds = zip(*[self.replay_buffer[index] for index in indices])
+        return np.array(states), np.array(actions), np.array(rewards), np.array(next_states), np.array(truncateds)
 
     def play_one_step(self, env, state, epsilon):
         action = self.epsilon_greedy_policy(state, epsilon)
@@ -46,18 +43,12 @@ class GameAgent:
     def training_step(self):
         experiences = self.sample_experiences()
         states, actions, rewards, next_states, truncateds = experiences
-        print(experiences)
         next_Q_values = self.model.predict(next_states, verbose=0)
-        print("CO JEST")
-        print(next_states)
-        print(next_Q_values)
-        print(next_Q_values.shape)
         max_next_Q_values = next_Q_values.max(axis=1)
         # print(max_next_Q_values)
         # print(max_next_Q_values.shape)
         runs = 1.0 - (truncateds)  # episode is not truncated
         target_Q_values = rewards + runs * self.discount_factor * max_next_Q_values
-        print(target_Q_values)
         target_Q_values = target_Q_values.reshape(-1, 1)
         mask = tf.one_hot(actions, self.n_outputs)
         with tf.GradientTape() as tape:
