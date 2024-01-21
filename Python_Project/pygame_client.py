@@ -19,6 +19,7 @@ class GameClient:
         self.YELLOW = (230, 230, 0)
         self.DARK_YELLOW = (200, 200, 0)
 
+
     def draw_segment(self, x, y):
         pygame.draw.rect(self.window, self.WHITE, [x, y, self.segment_size, self.segment_size])
 

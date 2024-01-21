@@ -1,11 +1,12 @@
 from collections import deque
 import tensorflow as tf
+from keras.models import load_model
 import numpy as np
 class GameAgent:
 
     def __init__(self):
 
-        input_shape = (14,)
+        input_shape = (11,)
         self.n_outputs = 3
 
         self.model = tf.keras.Sequential([
@@ -34,7 +35,7 @@ class GameAgent:
         states, actions, rewards, next_states, truncateds = zip(*[self.replay_buffer[index] for index in indices])
         return np.array(states), np.array(actions), np.array(rewards), np.array(next_states), np.array(truncateds)
 
-    def play_one_step(self, env, state, epsilon):
+    def play_one_step(self, env, state, epsilon=0):
         action = self.epsilon_greedy_policy(state, epsilon)
         next_state, reward, truncated = env.step(action)
         self.replay_buffer.append((state, action, reward, next_state, truncated))
@@ -58,6 +59,13 @@ class GameAgent:
 
         grads = tape.gradient(loss, self.model.trainable_variables)
         self.optimizer.apply_gradients(zip(grads, self.model.trainable_variables))
+
+    def save_model(self, n):
+        self.model.save("snake_model_" + str(n) + "_7.0")
+
+    def load_model(self, name):
+        self.model = load_model(name)
+
 
 
 

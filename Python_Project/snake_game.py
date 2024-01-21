@@ -8,13 +8,20 @@ class SnakeGame:
         self.snake_length = 1
         self.direction = 2
         self.food_position = ((window_width // 2) - 2*segment_size, window_height // 2)
-        self.score = 0
         self.game_ended = 0
-        self.last_distance = (abs(self.snake[0][0] - self.food_position[0]) + abs(self.snake[0][1] - self.food_position[1]))
-
         self.segment_size = segment_size
         self.window_width = window_width
         self.window_height = window_height
+
+    def reset(self):
+        self.snake = [((self.window_width // 2) - self.segment_size, self.window_height // 2),
+                      ((self.window_width // 2), self.window_height // 2),
+                      ((self.window_width // 2) + self.segment_size, self.window_height // 2),
+                      ((self.window_width // 2) + 2 * self.segment_size, self.window_height // 2)]
+        self.snake_length = 1
+        self.direction = 2
+        self.food_position = ((self.window_width // 2) - 2 * self.segment_size, self.window_height // 2)
+        self.game_ended = 0
 
     def random_food_position(self):
         x,y = self.food_position
@@ -24,7 +31,7 @@ class SnakeGame:
         return (x, y)
 
     def get_state(self):
-        vec = np.zeros(14)
+        vec = np.zeros(11)
 
         # snake direction
         vec[0] = self.direction == 0
@@ -32,72 +39,28 @@ class SnakeGame:
         vec[2] = self.direction == 2
         vec[3] = self.direction == 3
         # danger ahead
-        vec[4] = (self.direction == 0 and (( (self.snake[0][1] - self.segment_size) < 0) or ((self.snake[0][1] - self.segment_size) in self.snake[1:])) )or (
-                self.direction == 1 and (self.snake[0][1] + self.segment_size) > self.window_height) or (
-                self.direction == 2 and (self.snake[0][0] - self.segment_size) < 0) or (
-                self.direction == 3 and (self.snake[0][0] + self.segment_size) > self.window_width)
+        vec[4] = (self.direction == 0 and (( (self.snake[0][1] - self.segment_size) < 0) or ((self.snake[0][0],(self.snake[0][1] - self.segment_size)) in self.snake[1:])) )or (
+                self.direction == 1 and (((self.snake[0][1] + self.segment_size) > self.window_height) or ((self.snake[0][0],(self.snake[0][1] + self.segment_size)) in self.snake[1:]))) or (
+                self.direction == 2 and (((self.snake[0][0] - self.segment_size) < 0) or (((self.snake[0][0] - self.segment_size), self.snake[0][1]) in self.snake[1:])))or (
+                self.direction == 3 and (((self.snake[0][0] + self.segment_size) > self.window_width) or (((self.snake[0][0] + self.segment_size), self.snake[0][1]) in self.snake[1:])))
 
         # danger left
-        vec[5] = (self.direction == 0 and (((self.snake[0][0] - self.segment_size) < 0) or ((self.snake[0][0] - self.segment_size) in self.snake[1:])) )or (
-                self.direction == 1 and (self.snake[0][0] + self.segment_size) > self.window_width) or (
-                self.direction == 2 and (self.snake[0][1] + self.segment_size) > self.window_height) or (
-                self.direction == 3 and (self.snake[0][1] - self.segment_size) < 0)
+        vec[5] = (self.direction == 0 and (((self.snake[0][0] - self.segment_size) < 0) or (((self.snake[0][0] - self.segment_size), self.snake[0][1]) in self.snake[1:])) )or (
+                self.direction == 1 and (((self.snake[0][0] + self.segment_size) > self.window_width) or (((self.snake[0][0] + self.segment_size), self.snake[0][1]) in self.snake[1:]))) or (
+                self.direction == 2 and (((self.snake[0][1] + self.segment_size) > self.window_height) or ((self.snake[0][0],(self.snake[0][1] + self.segment_size)) in self.snake[1:]))) or (
+                self.direction == 3 and (((self.snake[0][1] - self.segment_size) < 0) or ((self.snake[0][0],(self.snake[0][1] - self.segment_size)) in self.snake[1:])))
 
         # danger right
-        vec[6] = (self.direction == 0 and (((self.snake[0][0] + self.segment_size) > self.window_width) or ((self.snake[0][0] + self.segment_size) in self.snake[1:])) ) or (
-                self.direction == 1 and (self.snake[0][0] - self.segment_size) < 0) or  (
-                self.direction == 2 and (self.snake[0][1] - self.segment_size) < 0) or (
-                self.direction == 3 and (self.snake[0][1] + self.segment_size) > self.window_height)
-
-        # tail ahead
-        vec[7] = ((self.direction == 0 and (((self.snake[0][1] - self.segment_size) in self.snake[1:]) or (
-                                           (self.snake[0][1] - 2* self.segment_size) in self.snake[1:]) or (
-                                           (self.snake[0][1] - 3* self.segment_size) in self.snake[1:]))) or (
-                   self.direction == 1 and (((self.snake[0][1] + self.segment_size) in self.snake[1:]) or (
-                                           (self.snake[0][1] + 2* self.segment_size) in self.snake[1:]) or (
-                                           (self.snake[0][1] + 3* self.segment_size) in self.snake[1:]))) or (
-                   self.direction == 2 and (((self.snake[0][0] - self.segment_size) in self.snake[1:]) or (
-                                           (self.snake[0][0] - 2 * self.segment_size) in self.snake[1:]) or (
-                                           (self.snake[0][0] - 3 * self.segment_size) in self.snake[1:]))) or (
-                   self.direction == 3 and (((self.snake[0][0] + self.segment_size) in self.snake[1:]) or (
-                                           (self.snake[0][0] + 2 * self.segment_size) in self.snake[1:]) or (
-                                           (self.snake[0][0] + 3 * self.segment_size) in self.snake[1:]))))
-
-        # tail left
-        vec[8] = ((self.direction == 0 and (((self.snake[0][0] - self.segment_size) in self.snake[1:]) or (
-                                            (self.snake[0][0] - 2 * self.segment_size) in self.snake[1:]) or (
-                                            (self.snake[0][0] - 3 * self.segment_size) in self.snake[1:]))) or (
-                   self.direction == 1 and (((self.snake[0][0] + self.segment_size) in self.snake[1:]) or (
-                                            (self.snake[0][0] + 2 * self.segment_size) in self.snake[1:]) or (
-                                            (self.snake[0][0] + 3 * self.segment_size) in self.snake[1:]))) or (
-                   self.direction == 2 and (((self.snake[0][1] + self.segment_size) in self.snake[1:]) or (
-                                            (self.snake[0][1] + 2 * self.segment_size) in self.snake[1:]) or (
-                                            (self.snake[0][1] + 3 * self.segment_size) in self.snake[1:]))) or (
-                   self.direction == 3 and (((self.snake[0][1] - self.segment_size) in self.snake[1:]) or (
-                                            (self.snake[0][1] - 2 * self.segment_size) in self.snake[1:]) or (
-                                            (self.snake[0][1] - 3 * self.segment_size) in self.snake[1:]))))
-
-        # tail right
-        vec[9] = ((self.direction == 0 and (((self.snake[0][0] + self.segment_size) in self.snake[1:]) or (
-                                            (self.snake[0][0] + 2 * self.segment_size) in self.snake[1:]) or (
-                                            (self.snake[0][0] + 3 * self.segment_size) in self.snake[1:]))) or (
-                   self.direction == 1 and (((self.snake[0][0] - self.segment_size) in self.snake[1:]) or (
-                                            (self.snake[0][0] - 2 * self.segment_size) in self.snake[1:]) or (
-                                            (self.snake[0][0] - 3 * self.segment_size) in self.snake[1:]))) or (
-                   self.direction == 2 and (((self.snake[0][1] - self.segment_size) in self.snake[1:]) or (
-                                            (self.snake[0][1] - 2 * self.segment_size) in self.snake[1:]) or (
-                                            (self.snake[0][1] - 3 * self.segment_size) in self.snake[1:]))) or (
-                   self.direction == 3 and (((self.snake[0][1] + self.segment_size) in self.snake[1:]) or (
-                                            (self.snake[0][1] + 2 * self.segment_size) in self.snake[1:]) or (
-                                            (self.snake[0][1] + 3 * self.segment_size) in self.snake[1:]))))
-
-
+        vec[6] = (self.direction == 0 and (((self.snake[0][0] + self.segment_size) > self.window_width) or (((self.snake[0][0] + self.segment_size), self.snake[0][1]) in self.snake[1:])) ) or (
+                self.direction == 1 and (((self.snake[0][0] - self.segment_size) < 0) or (((self.snake[0][0] - self.segment_size), self.snake[0][1]) in self.snake[1:]))) or  (
+                self.direction == 2 and (((self.snake[0][1] - self.segment_size) < 0) or ((self.snake[0][0],(self.snake[0][1] - self.segment_size)) in self.snake[1:]))) or (
+                self.direction == 3 and (((self.snake[0][1] + self.segment_size) > self.window_height) or ((self.snake[0][0],(self.snake[0][1] + self.segment_size)) in self.snake[1:])))
 
         #food direction
-        vec[10] = self.snake[0][1] < self.food_position[1] # food up
-        vec[11] = self.snake[0][1] > self.food_position[1] # food down
-        vec[12] = self.snake[0][0] < self.food_position[0] # food right
-        vec[13] = self.snake[0][0] > self.food_position[0] # food left
+        vec[7] = self.snake[0][1] < self.food_position[1] # food up
+        vec[8] = self.snake[0][1] > self.food_position[1] # food down
+        vec[9] = self.snake[0][0] < self.food_position[0] # food right
+        vec[10] = self.snake[0][0] > self.food_position[0] # food left
 
         return vec
 
