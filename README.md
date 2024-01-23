@@ -55,7 +55,7 @@ This project is an innovative version of the classic Snake game, enhanced with d
 
 <div style="text-align: center;">
   <video autoplay loop>
-    <source src="[ścieżka_do_twojego_wideo.mp4](https://github.com/p3choco/Reinforced_Python_Game/assets/62072811/ef08583b-cf2b-410f-8c51-c01b13b02584)https://github.com/p3choco/Reinforced_Python_Game/assets/62072811/ef08583b-cf2b-410f-8c51-c01b13b02584" type="video/quicktime">
+    <source src="https://github.com/p3choco/Reinforced_Python_Game/assets/62072811/ef08583b-cf2b-410f-8c51-c01b13b02584" type="video/quicktime">
   </video>
 </div>
 
