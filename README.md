@@ -23,14 +23,20 @@ This project is an innovative version of the classic Snake game, enhanced with d
 - **Pygame**: For game rendering and interactions.
 - **TensorFlow**: For the deep Q-learning model.
 
-## Running the Project
+## Running the Project 🚀
 1. Train the Agent: Run `python train_snake.py`.
 2. Visualize the Agent: Execute `python Snake_presentation.py`.
 
 
-# How It Works
 
-## Snake Perception and Decision-Making
+![output-onlinegiftools](https://github.com/p3choco/Reinforced_Python_Game/assets/62072811/bc9d105d-4e99-41df-8b97-2808a9cfae94)
+
+
+# How It Works?
+
+
+
+## Snake Perception and Decision-Making 🐍
 1. **Sensory Awareness**: The snake is programmed to perceive its immediate surroundings. It can detect obstacles within a one-block radius around its head.
 2. **Directional Awareness**: The snake is aware of its current movement direction, which plays a crucial role in its decision-making process.
 3. **Food Detection**: In addition to sensing its immediate surroundings, the snake is also aware of the direction in which food is located.
@@ -53,7 +59,5 @@ This project is an innovative version of the classic Snake game, enhanced with d
 2. **Average Score Achievement**: In its final form, the model consistently maintains an average score of around 30 points.
 3. **Significance of the Score**: Considering the dimensions of the game board (20x20), achieving a 30-point score is a strong indicator of the model's effectiveness and strategic gameplay.
 
-
-![output-onlinegiftools](https://github.com/p3choco/Reinforced_Python_Game/assets/62072811/bc9d105d-4e99-41df-8b97-2808a9cfae94)
 
 
