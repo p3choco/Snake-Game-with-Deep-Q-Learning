@@ -53,10 +53,7 @@ This project is an innovative version of the classic Snake game, enhanced with d
 2. **Average Score Achievement**: In its final form, the model consistently maintains an average score of around 30 points.
 3. **Significance of the Score**: Considering the dimensions of the game board (20x20), achieving a 30-point score is a strong indicator of the model's effectiveness and strategic gameplay.
 
-<div style="text-align: center;">
-  <video autoplay loop>
-    <source src="https://github.com/p3choco/Reinforced_Python_Game/assets/62072811/ef08583b-cf2b-410f-8c51-c01b13b02584" type="video/quicktime">
-  </video>
-</div>
+
+![output-onlinegiftools](https://github.com/p3choco/Reinforced_Python_Game/assets/62072811/bc9d105d-4e99-41df-8b97-2808a9cfae94)
 
 
