@@ -3,15 +3,6 @@
 ## Overview
 This project is an innovative version of the classic Snake game, enhanced with deep Q-learning, a form of reinforcement learning. Developed in Python, it integrates Pygame for game rendering and TensorFlow for implementing the reinforcement learning model.
 
-## Table of Contents
-- [Overview](#overview)
-- [Key Components](#key-components)
-- [Technologies Used](#technologies-used)
-- [Running the Project](#running-the-project)
-- [Snake Perception and Decision-Making](#snake-perception-and-decision-making)
-- [Learning process](#learning-process)
-- [Model Performance and Effectiveness](#model-performance-and-effectiveness)
-
 ## Key Components
 - **train_snake.py**: Handles the training of the snake agent using deep Q-learning.
 - **Snake_presentation.py**: Visualizes the performance of the trained model.
