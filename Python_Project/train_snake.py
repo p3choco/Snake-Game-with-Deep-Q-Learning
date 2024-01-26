@@ -36,7 +36,8 @@ for episode in range(6000):
             game_client.draw_head(*game.snake[0])
             for segment in game.snake[1:]:
                 game_client.draw_segment(*segment)
-            pygame.draw.rect(game_client.window, game_client.RED, [game.food_position[0], game.food_position[1], segment_size, segment_size])
+            pygame.draw.rect(game_client.window, game_client.RED, [game.food_position[0],
+                                    game.food_position[1], segment_size, segment_size])
 
             game_client.draw_score(game.snake_length - 1)
 

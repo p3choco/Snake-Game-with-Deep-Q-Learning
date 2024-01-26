@@ -46,8 +46,6 @@ class GameAgent:
         states, actions, rewards, next_states, truncateds = experiences
         next_Q_values = self.model.predict(next_states, verbose=0)
         max_next_Q_values = next_Q_values.max(axis=1)
-        # print(max_next_Q_values)
-        # print(max_next_Q_values.shape)
         runs = 1.0 - (truncateds)  # episode is not truncated
         target_Q_values = rewards + runs * self.discount_factor * max_next_Q_values
         target_Q_values = target_Q_values.reshape(-1, 1)
